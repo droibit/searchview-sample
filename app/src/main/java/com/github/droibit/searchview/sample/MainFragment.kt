@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import kotlinx.android.synthetic.main.fragment_main.contentOverlay
 import kotlinx.android.synthetic.main.fragment_main.list
 import kotlinx.android.synthetic.main.fragment_main.toolbar
 
@@ -40,6 +41,8 @@ class MainFragment : Fragment(), OnBackPressListener {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
+    contentOverlay.setOnClickListener { closeSearchView() }
+
     list.apply {
       setHasFixedSize(true)
       addItemDecoration(
@@ -64,18 +67,18 @@ class MainFragment : Fragment(), OnBackPressListener {
     toolbar.inflateMenu(R.menu.main)
     val searchItem = toolbar.menu.findItem(R.id.action_search)
     searchView = searchItem.actionView as SearchView
+    searchEditText.setOnFocusChangeListener { _, hasFocus ->
+      Log.d(TAG, "searchEditText#setOnFocusChangeListener(hasFocus=$hasFocus)")
+      contentOverlay.visibility = if (hasFocus) View.VISIBLE else View.GONE
+    }
     searchView.apply {
       searchView.findViewById<ImageView>(android.support.v7.appcompat.R.id.search_close_btn)
           .setImageResource(R.drawable.ic_close)
-//      searchEditText.also {
-//            it.hint = "Filter"
-//            it.setTextColor(Color.BLACK)
-//            it.setHintTextColor(Color.parseColor("#88444444"))
-//          }
 
       setOnSearchClickListener {
         Log.d(TAG, "#onSearchClick()")
-        toolbar.navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_back)
+        toolbar.navigationIcon =
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_back)
 //        toolbar.setBackgroundColor(Color.BLUE)
       }
       setOnCloseListener {
@@ -92,8 +95,6 @@ class MainFragment : Fragment(), OnBackPressListener {
           listAdapter.updateTexts(
               texts.filter { it.contains(query, ignoreCase = true) }
           )
-          val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-          imm.hideSoftInputFromWindow(searchEditText.windowToken, 0)
           hideKeyboard()
           view.requestFocus()
           return true
