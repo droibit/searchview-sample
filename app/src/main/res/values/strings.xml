@@ -1,0 +1,5 @@
+<resources>
+  <string name="app_name">SearchViewSample</string>
+
+  <string name="main_menu_title_search">Search</string>
+</resources>
