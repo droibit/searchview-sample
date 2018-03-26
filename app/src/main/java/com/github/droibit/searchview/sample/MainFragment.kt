@@ -52,7 +52,6 @@ class MainFragment : Fragment(), OnBackPressListener {
           LayoutInflater.from(requireContext()),
           texts
       ) {
-        hideKeyboard()
         requireFragmentManager().beginTransaction()
             .add(R.id.content, DetailFragment.newInstance(it))
             .addToBackStack(null)
@@ -96,6 +95,7 @@ class MainFragment : Fragment(), OnBackPressListener {
           val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
           imm.hideSoftInputFromWindow(searchEditText.windowToken, 0)
           hideKeyboard()
+          view.requestFocus()
           return true
         }
 
