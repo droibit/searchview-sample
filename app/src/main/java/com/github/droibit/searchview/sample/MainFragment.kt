@@ -1,7 +1,6 @@
 package com.github.droibit.searchview.sample
 
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -52,7 +51,13 @@ class MainFragment : Fragment(), OnBackPressListener {
       listAdapter = TextListAdapter(
           LayoutInflater.from(requireContext()),
           texts
-      ).also {
+      ) {
+        hideKeyboard()
+        requireFragmentManager().beginTransaction()
+            .add(R.id.content, DetailFragment.newInstance(it))
+            .addToBackStack(null)
+            .commit()
+      }.also {
         adapter = it
       }
     }

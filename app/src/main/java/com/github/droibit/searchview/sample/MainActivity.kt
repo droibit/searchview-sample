@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
   override fun onBackPressed() {
     Log.d(TAG,"#onBackPressed")
     val listener = supportFragmentManager.findFragmentById(R.id.content) as? OnBackPressListener
-    if (listener?.onBackPressed() == false) {
+    if (listener?.onBackPressed() != true) {
       super.onBackPressed()
     }
   }

@@ -7,9 +7,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.github.droibit.searchview.sample.TextListAdapter.ViewHolder
 
+typealias OnItemClickListener = (String) -> Unit
+
 class TextListAdapter(
   private val inflater: LayoutInflater,
-  texts: List<String>
+  texts: List<String>,
+  private val itemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<ViewHolder>() {
 
   private val texts: MutableList<String> = ArrayList(texts)
@@ -19,7 +22,9 @@ class TextListAdapter(
     viewType: Int
   ): ViewHolder {
     val itemView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
-    return ViewHolder(itemView)
+    return ViewHolder(itemView).apply {
+      itemView.setOnClickListener { itemClickListener.invoke(texts[adapterPosition]) }
+    }
   }
 
   override fun getItemCount() = texts.size
