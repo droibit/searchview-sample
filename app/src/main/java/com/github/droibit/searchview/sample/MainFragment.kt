@@ -165,7 +165,7 @@ class MainFragment : Fragment(), OnBackPressListener {
         "foundation"
     )
 
-    private val TAG = MainFragment.javaClass.simpleName
+    private val TAG = MainFragment::class.java.simpleName
 
     fun newInstance() = MainFragment()
   }
