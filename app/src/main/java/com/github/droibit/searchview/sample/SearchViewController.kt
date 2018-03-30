@@ -44,6 +44,7 @@ class SearchViewController(
         override fun onQueryTextSubmit(query: String): Boolean {
           Log.d(TAG, "#onQueryTextSubmit(query=$query)")
           submitListener.invoke(query)
+          searchEditText.clearFocus()
           return true
         }
 
