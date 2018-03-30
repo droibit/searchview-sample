@@ -1,4 +1,4 @@
-package com.github.droibit.searchview.sample
+package com.github.droibit.searchview.sample.main
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
@@ -15,6 +15,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import com.github.droibit.searchview.sample.DetailFragment
+import com.github.droibit.searchview.sample.OnBackPressListener
+import com.github.droibit.searchview.sample.R
+import com.github.droibit.searchview.sample.R.drawable
+import com.github.droibit.searchview.sample.R.layout
+import com.github.droibit.searchview.sample.R.menu
+import com.github.droibit.searchview.sample.TextListAdapter
 import kotlinx.android.synthetic.main.fragment_main.contentOverlay
 import kotlinx.android.synthetic.main.fragment_main.list
 import kotlinx.android.synthetic.main.fragment_main.toolbar
@@ -33,7 +40,7 @@ class MainFragment : Fragment(), OnBackPressListener {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View = inflater.inflate(R.layout.fragment_main, container, false)
+  ): View = inflater.inflate(layout.fragment_main, container, false)
 
   override fun onViewCreated(
     view: View,
@@ -56,15 +63,19 @@ class MainFragment : Fragment(), OnBackPressListener {
           texts
       ) {
         requireFragmentManager().beginTransaction()
-            .add(R.id.content, DetailFragment.newInstance(it))
+            .add(
+                R.id.content,
+                DetailFragment.newInstance(it)
+            )
             .addToBackStack(null)
             .commit()
-      }.also {
+      }
+          .also {
         adapter = it
       }
     }
 
-    toolbar.inflateMenu(R.menu.main)
+    toolbar.inflateMenu(menu.main)
     val searchItem = toolbar.menu.findItem(R.id.action_search)
     searchView = searchItem.actionView as SearchView
     searchEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -73,19 +84,25 @@ class MainFragment : Fragment(), OnBackPressListener {
     }
     searchView.apply {
       searchView.findViewById<ImageView>(android.support.v7.appcompat.R.id.search_close_btn)
-          .setImageResource(R.drawable.ic_close)
+          .setImageResource(drawable.ic_close)
 
       setOnSearchClickListener {
         Log.d(TAG, "#onSearchClick()")
         toolbar.navigationIcon =
-            ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_back)
+            ContextCompat.getDrawable(requireContext(),
+                drawable.ic_arrow_back
+            )
 //        toolbar.setBackgroundColor(Color.BLUE)
       }
       setOnCloseListener {
         Log.d(TAG, "#onClose()")
         searchView.setQuery("", false)
-        listAdapter.updateTexts(texts)
-        toolbar.navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_menu)
+        listAdapter.updateTexts(
+            texts
+        )
+        toolbar.navigationIcon = ContextCompat.getDrawable(requireContext(),
+            drawable.ic_menu
+        )
 //        toolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
         false
       }
